@@ -10,6 +10,7 @@ int main(void)
         cout << endl << "1. 生成多项式.";
         cout << endl << "2. 显示多项式.";
         cout << endl << "3. 多项式加法.";
+		cout << endl << "4. 多项式乘法.";
 		cout << endl << "0. 退出";
 		cout << endl << "选择功能(0~3):";
 		cin >> c;
@@ -57,6 +58,40 @@ int main(void)
 				fc.Display();
 			    cout << endl;			
 				break;
+			case '4':
+				// 输入fa
+				fa.SetZero();		// 将fa设置为0
+				cout << endl << "输入fa的项(coef, expn)(e = -1时退出):" << endl;
+				cin >> it.coef >> it.expn;
+				while (it.expn != -1)	{
+					fa.InsItem(it);
+					cin >> it.coef >> it.expn;
+				}
+			    
+				// 输入fb
+				fb.SetZero();		// 将fb设置为0
+				cout << endl << "输入fb的项(coef, expn)(e = -1时退出):" << endl;
+				cin >> it.coef >> it.expn;
+				while (it.expn != -1)	{
+					fb.InsItem(it);
+					cin >> it.coef >> it.expn;
+				}
+
+				fc.SetZero();
+				fc=fa*fb;
+				cout << "fa:" << endl;			// 显示fa
+				fa.Display();
+			    cout << endl;			
+
+			    cout << "fb:" << endl;			// 显示fa
+				fb.Display();
+			    cout << endl;			
+
+			    cout << "fa * fb:" << endl;		// 显示fc = fa * fb
+				fc.Display();
+			    cout << endl;			
+				break;
+				
 		}
 	}
 	system("PAUSE");				// 调用库函数system()

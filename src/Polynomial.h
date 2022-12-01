@@ -22,6 +22,7 @@ public:
 	void Display();				// 显示多项式
 	void InsItem( const PolyItem &item);		// 插入一项
 	Polynomial operator +(const Polynomial &p) const; // 加法运算符重载
+	Polynomial operator *(const Polynomial &p) const; // 加法运算符重载
 	Polynomial(const Polynomial &copy);			// 复制构造函数
 	Polynomial(const LinkList<PolyItem> &copyLinkList);				
 		// 由多项式组成的线性表构造多项式
@@ -81,6 +82,11 @@ void Polynomial::InsItem( const PolyItem &item)
 	Status status = polyList.GetElem(pos, it);
 	while ( status == ENTRY_FOUND && it.expn > item.expn) 	// 查找插入位置
 			status = polyList.GetElem(++pos, it);
+	if(it.expn==item.expn){
+		PolyItem tmp(it.coef+item.coef,item.expn); //处理指数相同的项
+		polyList.SetElem(pos,tmp);
+		return;
+	}
 	polyList.InsertElem(pos, item);					            // 向多项式插入一项
 }
 
@@ -160,4 +166,31 @@ Polynomial &Polynomial::operator =(const LinkList<PolyItem> &copyLinkList)
 	return *this;
 }
 
+Polynomial Polynomial::operator *(const Polynomial & p) const
+{
+	LinkList<PolyItem> la = this->polyList;			// 当前多项式对应的线性表
+	LinkList<PolyItem> lb = p.polyList;			// 多项式p对应的线性表
+	Polynomial lc,temp;						// 和多项式对应的线性表
+	int aPos = 1, bPos = 1;
+	PolyItem aItem, bItem;
+	Status aStatus, bStatus;
+	
+	aStatus = la.GetElem(aPos++, aItem);			// 取出la的第1项 
+	bStatus = lb.GetElem(bPos++, bItem);			// 取出lb的第1项
+
+	while(aStatus==ENTRY_FOUND){
+		while(bStatus==ENTRY_FOUND){
+			PolyItem tmp(aItem.coef*bItem.coef,aItem.expn+bItem.expn);
+			temp.InsItem(tmp);
+			bStatus=lb.GetElem(bPos++,bItem);
+		}
+
+		lc=lc+temp;
+		temp.SetZero();
+		aStatus=la.GetElem(aPos++,aItem);
+		bPos=1;
+		bStatus = lb.GetElem(bPos++, bItem);			// 取出lb的第1项
+	}
+	return lc;
+}
 #endif
