@@ -22,6 +22,7 @@ public:
 	void Display();				// 显示多项式
 	void InsItem( const PolyItem &item);		// 插入一项
 	Polynomial operator +(const Polynomial &p) const; // 加法运算符重载
+	Polynomial operator -(const Polynomial &p) const; // 加法运算符重载
 	Polynomial operator *(const Polynomial &p) const; // 加法运算符重载
 	Polynomial(const Polynomial &copy);			// 复制构造函数
 	Polynomial(const LinkList<PolyItem> &copyLinkList);				
@@ -192,5 +193,52 @@ Polynomial Polynomial::operator *(const Polynomial & p) const
 		bStatus = lb.GetElem(bPos++, bItem);			// 取出lb的第1项
 	}
 	return lc;
+}
+
+Polynomial Polynomial::operator -(const Polynomial &p) const
+// 操作结果：返回当前多项式与p之和——加法运算符重载
+{
+	LinkList<PolyItem> la = polyList;			// 当前多项式对应的线性表
+	LinkList<PolyItem> lb = p.polyList;			// 多项式p对应的线性表
+	LinkList<PolyItem> lc;						// 和多项式对应的线性表
+	int aPos = 1, bPos = 1;
+	PolyItem aItem, bItem;
+	Status aStatus, bStatus;
+	
+	aStatus = la.GetElem(aPos++, aItem);			// 取出la的第1项 
+	bStatus = lb.GetElem(bPos++, bItem);			// 取出lb的第1项
+
+	while (aStatus == ENTRY_FOUND && bStatus == ENTRY_FOUND )	{
+		if (aItem.expn > bItem.expn) {		// la中的项aItem指数较小
+			lc.InsertElem(aItem);	// 将aItem追加到lc的表尾 
+			aStatus = la.GetElem(aPos++, aItem);// 取出la的第下一项
+		}
+		else if (aItem.expn < bItem.expn) {	// lb中的项bItem指数较小
+			lc.InsertElem(bItem);	// 将bItem追加到lc的表尾
+			bStatus = lb.GetElem(bPos++, bItem);// 取出lb的第下一项
+		}
+		else {	// la中的项aItem和lb中的项bItem指数相等
+			PolyItem sumItem(aItem.coef - bItem.coef, aItem.expn);
+			if (sumItem.coef != 0)
+				lc.InsertElem(sumItem);	// 将两项的和追加到lc的表尾
+			aStatus = la.GetElem(aPos++, aItem);// 取出la的第下一项
+			bStatus = lb.GetElem(bPos++, bItem);// 取出lb的第下一项
+		}
+	}
+	
+	while (aStatus == ENTRY_FOUND) {	// 将la的剩余项追加到lc的后面
+		lc.InsertElem(aItem);	// 将aItem追加到lc的后面
+		aStatus = la.GetElem(aPos++, aItem);// 取出la的第下一项
+	}
+
+	while (bStatus == ENTRY_FOUND) {	// 将lb的剩余项追加到lc的后面
+		lc.InsertElem(bItem);	// 将bItem追加到lc的后面
+		bStatus = lb.GetElem(bPos++, bItem);// 取出lb的第下一项
+	}
+
+	Polynomial fc;							// 和多项式
+	fc.polyList = lc;
+
+	return fc;
 }
 #endif
