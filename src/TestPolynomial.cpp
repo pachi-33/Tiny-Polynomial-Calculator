@@ -12,6 +12,7 @@ int main(void)
         cout << endl << "3. 多项式加法.";
 		cout << endl << "4. 多项式减法.";
 		cout << endl << "5. 多项式乘法.";
+		cout << endl << "6. 计算多项式.";
 		cout << endl << "0. 退出";
 		cout << endl << "选择功能(0~3):";
 		cin >> c;
@@ -68,8 +69,7 @@ int main(void)
 					fa.InsItem(it);
 					cin >> it.coef >> it.expn;
 				}
-			    
-				// 输入fb
+			    				// 输入fb
 				fb.SetZero();		// 将fb设置为0
 				cout << endl << "输入fb的项(coef, expn)(e = -1时退出):" << endl;
 				cin >> it.coef >> it.expn;
@@ -123,6 +123,10 @@ int main(void)
 			    cout << "fa * fb:" << endl;		// 显示fc = fa * fb
 				fc.Display();
 			    cout << endl;			
+				break;
+			
+			case '6': //Calculate the polimonial
+				fa.Calculate();
 				break;
 				
 		}

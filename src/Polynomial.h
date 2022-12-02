@@ -11,6 +11,7 @@ class Polynomial
 protected:
 // 多项式实现的数据成员:
 	LinkList<PolyItem> polyList;// 多项式组成的线性表
+	// double x;
 
 public:
 	//  抽象数据类型方法声明及重载编译系统默认方法声明:
@@ -21,6 +22,7 @@ public:
 	void SetZero();				// 将多项式置为0
 	void Display();				// 显示多项式
 	void InsItem( const PolyItem &item);		// 插入一项
+	void Calculate();			// 计算多项式
 	Polynomial operator +(const Polynomial &p) const; // 加法运算符重载
 	Polynomial operator -(const Polynomial &p) const; // 加法运算符重载
 	Polynomial operator *(const Polynomial &p) const; // 加法运算符重载
@@ -89,6 +91,24 @@ void Polynomial::InsItem( const PolyItem &item)
 		return;
 	}
 	polyList.InsertElem(pos, item);					            // 向多项式插入一项
+}
+
+void Polynomial::Calculate()			// 计算多项式
+{
+	double x;
+	cout << "请输入x的值：";
+	cin >> x;
+	double sum = 0;
+	int pos = 1;
+	PolyItem it;
+	Status status = polyList.GetElem(pos, it);
+	while (status == ENTRY_FOUND) {				// 依次计算多项式的每一项
+		sum += it.coef * pow(x, it.expn);
+		status = polyList.GetElem(++pos, it);	// 取出下一项
+	}
+	cout << "f(" << x << ") = ";
+	Display();
+	cout << " = " << sum << endl;
 }
 
 Polynomial Polynomial::operator +(const Polynomial &p) const
